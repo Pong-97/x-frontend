@@ -71,23 +71,30 @@ x-frontend/
 │   │   └── cart.js
 │   ├── utils/          # 工具函数
 │   │   └── axios.js
-│   ├── views/          # 页面组件
-│   │   ├── Home.vue
-│   │   ├── Category.vue
-│   │   ├── Cart.vue
-│   │   ├── Member.vue
-│   │   ├── Login.vue
-│   │   ├── Register.vue
-│   │   ├── ProductList.vue
-│   │   ├── ProductDetail.vue
-│   │   ├── Search.vue
-│   │   ├── OrderCreate.vue
-│   │   ├── OrderList.vue
-│   │   ├── OrderDetail.vue
-│   │   ├── Address.vue
-│   │   ├── AddressAdd.vue
-│   │   ├── AddressEdit.vue
-│   │   └── UserInfo.vue
+│   ├── views/          # 页面组件（按模块组织）
+│   │   ├── home/
+│   │   │   └── index.vue
+│   │   ├── category/
+│   │   │   └── index.vue
+│   │   ├── cart/
+│   │   │   └── index.vue
+│   │   ├── product/
+│   │   │   ├── list.vue
+│   │   │   ├── detail.vue
+│   │   │   └── search.vue
+│   │   ├── order/
+│   │   │   ├── create.vue
+│   │   │   ├── list.vue
+│   │   │   └── detail.vue
+│   │   ├── address/
+│   │   │   ├── index.vue
+│   │   │   ├── add.vue
+│   │   │   └── edit.vue
+│   │   └── user/
+│   │       ├── login.vue
+│   │       ├── register.vue
+│   │       ├── member.vue
+│   │       └── info.vue
 │   ├── App.vue
 │   └── main.js
 ├── index.html
