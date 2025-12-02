@@ -11,11 +11,16 @@ const Random = Mock.Random
 const generateProducts = (count = 20) => {
   const products = []
   for (let i = 1; i <= count; i++) {
+    // 先生成原价，再根据折扣生成现价，确保现价小于原价
+    const originalPrice = Random.float(100, 1200, 2, 2)
+    const discount = Random.float(0.5, 0.95, 2, 2) // 5折到9.5折
+    const price = parseFloat((originalPrice * discount).toFixed(2))
+    
     products.push({
       id: i,
       name: Random.ctitle(5, 15),
-      price: Random.float(10, 999, 2, 2),
-      originalPrice: Random.float(100, 1200, 2, 2),
+      price: price,
+      originalPrice: originalPrice,
       image: Random.image('300x300', Random.color(), '#FFF', 'png', Random.word(2)),
       images: [
         Random.image('600x600', Random.color(), '#FFF', 'png', '1'),

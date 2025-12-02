@@ -14,6 +14,7 @@
       <div class="price-box">
         <span class="current-price">¥{{ product.price }}</span>
         <span class="original-price">¥{{ product.originalPrice }}</span>
+        <span class="discount-tag">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
       </div>
       <div class="product-name">{{ product.name }}</div>
       <div class="product-tags">
@@ -167,6 +168,12 @@ const goCart = () => {
   router.push('/cart')
 }
 
+const calculateDiscount = (price, originalPrice) => {
+  if (!originalPrice || originalPrice <= 0 || price >= originalPrice) return ''
+  const discount = (price / originalPrice * 10).toFixed(1)
+  return `${discount}折`
+}
+
 onMounted(() => {
   loadProduct()
 })
@@ -196,18 +203,28 @@ onMounted(() => {
   
   .price-box {
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     
     .current-price {
       font-size: 24px;
       color: #ff4444;
       font-weight: bold;
-      margin-right: 10px;
     }
     
     .original-price {
       font-size: 14px;
       color: #999;
       text-decoration: line-through;
+    }
+    
+    .discount-tag {
+      font-size: 12px;
+      color: #ff4444;
+      background: #fff0f0;
+      padding: 3px 8px;
+      border-radius: 4px;
     }
   }
   

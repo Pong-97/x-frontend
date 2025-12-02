@@ -41,6 +41,7 @@
               <div class="product-price">
                 <span class="current">¥{{ product.price }}</span>
                 <span class="original">¥{{ product.originalPrice }}</span>
+                <span class="discount">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
               </div>
             </div>
           </div>
@@ -60,6 +61,12 @@ const router = useRouter()
 const categories = ref([])
 const activeCategory = ref(null)
 const products = ref([])
+
+const calculateDiscount = (price, originalPrice) => {
+  if (!originalPrice || originalPrice <= 0 || price >= originalPrice) return ''
+  const discount = (price / originalPrice * 10).toFixed(1)
+  return `${discount}折`
+}
 
 const currentCategory = computed(() => {
   return categories.value.find(c => c.id === activeCategory.value)
@@ -106,8 +113,10 @@ onMounted(() => {
 
 <style scoped lang="less">
 .category-page {
-  height: calc(100vh - 50px);
+  height: 100vh;
   background: #f5f5f5;
+  padding-bottom: 50px;
+  box-sizing: border-box;
 }
 
 .category-container {
@@ -119,6 +128,7 @@ onMounted(() => {
   width: 90px;
   background: #f5f5f5;
   overflow-y: auto;
+  flex-shrink: 0;
   
   .category-item {
     display: flex;
@@ -154,7 +164,9 @@ onMounted(() => {
   flex: 1;
   background: white;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 15px;
+  min-width: 0;
   
   .sub-categories {
     display: flex;
@@ -168,6 +180,7 @@ onMounted(() => {
       border-radius: 20px;
       font-size: 13px;
       color: #666;
+      white-space: nowrap;
     }
   }
   
@@ -177,6 +190,7 @@ onMounted(() => {
       gap: 12px;
       padding: 12px 0;
       border-bottom: 1px solid #f5f5f5;
+      min-width: 0;
       
       .product-image {
         width: 100px;
@@ -191,6 +205,8 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        min-width: 0;
+        overflow: hidden;
         
         .product-name {
           font-size: 14px;
@@ -200,7 +216,9 @@ onMounted(() => {
           text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-line-clamp: 2;
+          line-clamp: 2;
           -webkit-box-orient: vertical;
+          word-break: break-all;
         }
         
         .product-desc {
@@ -215,17 +233,30 @@ onMounted(() => {
           display: flex;
           align-items: center;
           gap: 8px;
+          flex-wrap: wrap;
           
           .current {
             font-size: 16px;
             color: #ff4444;
             font-weight: bold;
+            white-space: nowrap;
           }
           
           .original {
             font-size: 12px;
             color: #999;
             text-decoration: line-through;
+            white-space: nowrap;
+          }
+          
+          .discount {
+            font-size: 11px;
+            color: #ff4444;
+            background: #fff0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            white-space: nowrap;
           }
         }
       }
