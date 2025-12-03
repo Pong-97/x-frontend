@@ -314,7 +314,7 @@ Mock.mock('/api/order/create', 'post', {
   code: 200,
   message: '订单创建成功',
   data: {
-    orderId: Random.guid(),
+    orderId: Random.integer(1, 10000),
     orderNo: /\d{18}/
   }
 })
@@ -323,29 +323,55 @@ Mock.mock('/api/order/create', 'post', {
 Mock.mock(RegExp('/api/order/list.*'), 'get', (options) => {
   const url = new URL('http://localhost' + options.url)
   const status = url.searchParams.get('status')
+  const page = parseInt(url.searchParams.get('page') || '1')
+  const pageSize = parseInt(url.searchParams.get('pageSize') || '10')
   
-  return {
-    code: 200,
-    'data|5-10': [{
-      'id|+1': 1,
-      orderNo: /\d{18}/,
-      status: status || Random.integer(0, 4), // 0待付款 1待发货 2待收货 3待评价 4已完成
-      totalAmount: Random.float(100, 1000, 2, 2),
-      createTime: Random.datetime(),
-      'products|1-3': [{
+  // 生成订单数据
+  const orderCount = Random.integer(15, 30)
+  const allOrders = []
+  
+  for (let i = 0; i < orderCount; i++) {
+    const orderStatus = status ? parseInt(status) : Random.integer(0, 4)
+    const productCount = Random.integer(1, 3)
+    const products = []
+    
+    for (let j = 0; j < productCount; j++) {
+      products.push({
         productId: Random.integer(1, 50),
         name: Random.ctitle(5, 15),
         image: Random.image('100x100', Random.color(), '#FFF', 'png', 'product'),
         price: Random.float(10, 999, 2, 2),
         quantity: Random.integer(1, 5),
         spec: '红色 M'
-      }]
-    }]
+      })
+    }
+    
+    allOrders.push({
+      id: i + 1,
+      orderNo: Random.string('number', 18),
+      status: orderStatus,
+      totalAmount: Random.float(100, 1000, 2, 2),
+      createTime: Random.datetime(),
+      products: products
+    })
+  }
+  
+  const start = (page - 1) * pageSize
+  const end = start + pageSize
+  
+  return {
+    code: 200,
+    data: {
+      list: allOrders.slice(start, end),
+      total: allOrders.length,
+      page,
+      pageSize
+    }
   }
 })
 
 // 获取订单详情
-Mock.mock(RegExp('/api/order/\\d+'), 'get', {
+Mock.mock(RegExp('/api/order/[^/]+$'), 'get', {
   code: 200,
   data: {
     id: 1,

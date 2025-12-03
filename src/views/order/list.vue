@@ -132,14 +132,14 @@ const loadOrders = async () => {
     const data = await getOrderList(params)
     
     if (page.value === 1) {
-      orders.value = data
+      orders.value = data.list
     } else {
-      orders.value.push(...data)
+      orders.value.push(...data.list)
     }
     
     loading.value = false
     
-    if (data.length < 10) {
+    if (data.list.length < 10) {
       finished.value = true
     }
   } catch (error) {
