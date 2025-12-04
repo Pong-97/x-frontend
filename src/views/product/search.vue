@@ -35,22 +35,13 @@
         <van-empty description="没有找到相关商品" />
       </div>
       <div v-else class="product-list">
-        <div
+        <ProductListItem
           v-for="product in products"
           :key="product.id"
-          class="product-item"
-          @click="goProductDetail(product.id)"
-        >
-          <img :src="product.image" class="product-image" />
-          <div class="product-info">
-            <div class="product-name">{{ product.name }}</div>
-            <div class="product-price">
-              <span class="current">¥{{ product.price }}</span>
-              <span class="original">¥{{ product.originalPrice }}</span>
-              <span class="discount">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
-            </div>
-          </div>
-        </div>
+          :product="product"
+          :show-description="false"
+          @click="goProductDetail"
+        />
       </div>
     </div>
   </div>
@@ -61,6 +52,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { searchProduct } from '@/api/product'
 import { showConfirmDialog } from 'vant'
+import ProductListItem from '@/components/ProductListItem.vue'
 
 const router = useRouter()
 const keyword = ref('')
@@ -116,11 +108,6 @@ const goProductDetail = (id) => {
   router.push(`/product/${id}`)
 }
 
-const calculateDiscount = (price, originalPrice) => {
-  if (!originalPrice || originalPrice <= 0 || price >= originalPrice) return ''
-  const discount = (price / originalPrice * 10).toFixed(1)
-  return `${discount}折`
-}
 </script>
 
 <style scoped lang="less">
@@ -165,64 +152,10 @@ const calculateDiscount = (price, originalPrice) => {
   .product-list {
     padding: 10px;
     
-    .product-item {
-      display: flex;
-      gap: 12px;
-      background: white;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      
+    :deep(.product-item) {
       .product-image {
         width: 80px;
         height: 80px;
-        object-fit: cover;
-        border-radius: 8px;
-        flex-shrink: 0;
-      }
-      
-      .product-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        
-        .product-name {
-          font-size: 14px;
-          color: #333;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-        }
-        
-        .product-price {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          
-          .current {
-            font-size: 16px;
-            color: #ff4444;
-            font-weight: bold;
-          }
-          
-          .original {
-            font-size: 12px;
-            color: #999;
-            text-decoration: line-through;
-          }
-          
-          .discount {
-            font-size: 11px;
-            color: #ff4444;
-            background: #fff0f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 4px;
-          }
-        }
       }
     }
   }

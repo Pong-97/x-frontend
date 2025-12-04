@@ -44,11 +44,7 @@
         >
           <img :src="product.image" class="product-image" />
           <div class="product-name">{{ product.name }}</div>
-          <div class="product-price">
-            <span class="current">¥{{ product.price }}</span>
-            <span class="original">¥{{ product.originalPrice }}</span>
-            <span class="discount">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
-          </div>
+          <ProductPrice :price="product.price" :original-price="product.originalPrice" />
         </div>
       </div>
     </div>
@@ -68,11 +64,7 @@
         >
           <img :src="product.image" class="product-image" />
           <div class="product-name">{{ product.name }}</div>
-          <div class="product-price">
-            <span class="current">¥{{ product.price }}</span>
-            <span class="original">¥{{ product.originalPrice }}</span>
-            <span class="discount">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
-          </div>
+          <ProductPrice :price="product.price" :original-price="product.originalPrice" />
         </div>
       </div>
     </div>
@@ -83,6 +75,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getHomeData } from '@/api/home'
+import ProductPrice from '@/components/ProductPrice.vue'
 
 const router = useRouter()
 const searchValue = ref('')
@@ -124,11 +117,6 @@ const goProductDetail = (id) => {
   router.push(`/product/${id}`)
 }
 
-const calculateDiscount = (price, originalPrice) => {
-  if (!originalPrice || originalPrice <= 0 || price >= originalPrice) return ''
-  const discount = (price / originalPrice * 10).toFixed(1)
-  return `${discount}折`
-}
 
 onMounted(() => {
   loadHomeData()
@@ -225,32 +213,6 @@ onMounted(() => {
         -webkit-box-orient: vertical;
       }
       
-      .product-price {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        
-        .current {
-          font-size: 16px;
-          color: #ff4444;
-          font-weight: bold;
-        }
-        
-        .original {
-          font-size: 12px;
-          color: #999;
-          text-decoration: line-through;
-        }
-        
-        .discount {
-          font-size: 11px;
-          color: #ff4444;
-          background: #fff0f0;
-          padding: 2px 6px;
-          border-radius: 4px;
-          margin-left: 4px;
-        }
-      }
     }
   }
 }

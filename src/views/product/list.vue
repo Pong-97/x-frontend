@@ -22,26 +22,13 @@
       @load="onLoad"
     >
       <div class="product-list">
-        <div
+        <ProductListItem
           v-for="product in products"
           :key="product.id"
-          class="product-item"
-          @click="goProductDetail(product.id)"
-        >
-          <img :src="product.image" class="product-image" />
-          <div class="product-info">
-            <div class="product-name">{{ product.name }}</div>
-            <div class="product-desc">{{ product.description }}</div>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="current">¥{{ product.price }}</span>
-                <span class="original">¥{{ product.originalPrice }}</span>
-                <span class="discount">{{ calculateDiscount(product.price, product.originalPrice) }}</span>
-              </div>
-              <div class="product-sales">已售{{ product.sales }}</div>
-            </div>
-          </div>
-        </div>
+          :product="product"
+          show-sales
+          @click="goProductDetail"
+        />
       </div>
     </van-list>
   </div>
@@ -51,6 +38,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getProductList } from '@/api/product'
+import ProductListItem from '@/components/ProductListItem.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -117,12 +105,6 @@ const goProductDetail = (id) => {
   router.push(`/product/${id}`)
 }
 
-const calculateDiscount = (price, originalPrice) => {
-  if (!originalPrice || originalPrice <= 0 || price >= originalPrice) return ''
-  const discount = (price / originalPrice * 10).toFixed(1)
-  return `${discount}折`
-}
-
 onMounted(() => {
   loadProducts()
 })
@@ -157,86 +139,5 @@ onMounted(() => {
 
 .product-list {
   padding: 10px;
-  
-  .product-item {
-    display: flex;
-    gap: 12px;
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    
-    .product-image {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 8px;
-      flex-shrink: 0;
-    }
-    
-    .product-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      
-      .product-name {
-        font-size: 14px;
-        color: #333;
-        font-weight: 500;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-      
-      .product-desc {
-        font-size: 12px;
-        color: #999;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      
-      .product-bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        
-        .product-price {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          
-          .current {
-            font-size: 16px;
-            color: #ff4444;
-            font-weight: bold;
-          }
-          
-          .original {
-            font-size: 12px;
-            color: #999;
-            text-decoration: line-through;
-          }
-          
-          .discount {
-            font-size: 11px;
-            color: #ff4444;
-            background: #fff0f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 4px;
-          }
-        }
-        
-        .product-sales {
-          font-size: 12px;
-          color: #999;
-        }
-      }
-    }
-  }
 }
 </style>
