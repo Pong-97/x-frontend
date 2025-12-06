@@ -10,11 +10,17 @@ const Random = Mock.Random
 // 生成商品数据
 const generateProducts = (count = 20) => {
   const products = []
+  // 所有子分类 ID
+  const subCategoryIds = [11, 12, 13, 21, 22, 23, 31, 32, 41, 42, 51, 52, 61, 62, 71, 72, 81, 82]
+  
   for (let i = 1; i <= count; i++) {
     // 先生成原价，再根据折扣生成现价，确保现价小于原价
     const originalPrice = Random.float(100, 1200, 2, 2)
     const discount = Random.float(0.5, 0.95, 2, 2) // 5折到9.5折
     const price = parseFloat((originalPrice * discount).toFixed(2))
+    
+    // 随机选择一个子分类 ID
+    const categoryId = subCategoryIds[Random.integer(0, subCategoryIds.length - 1)]
     
     products.push({
       id: i,
@@ -30,7 +36,7 @@ const generateProducts = (count = 20) => {
       description: Random.cparagraph(3, 7),
       stock: Random.integer(0, 1000),
       sales: Random.integer(0, 10000),
-      categoryId: Random.integer(1, 8),
+      categoryId: categoryId, // 使用子分类 ID
       specs: [
         { name: '颜色', values: ['红色', '蓝色', '黑色', '白色'] },
         { name: '尺寸', values: ['S', 'M', 'L', 'XL'] }
@@ -178,7 +184,16 @@ Mock.mock(RegExp('/api/product/list.*'), 'get', (options) => {
   
   let filteredProducts = products
   if (categoryId) {
-    filteredProducts = products.filter(p => p.categoryId === parseInt(categoryId))
+    const cid = parseInt(categoryId)
+    // 如果是一级分类（1-8），匹配所有以该数字开头的子分类
+    // 如果是子分类（11, 12等），精确匹配
+    if (cid < 10) {
+      // 一级分类：匹配所有 10*cid + x 的子分类（如 1 匹配 11, 12, 13）
+      filteredProducts = products.filter(p => Math.floor(p.categoryId / 10) === cid)
+    } else {
+      // 子分类：精确匹配
+      filteredProducts = products.filter(p => p.categoryId === cid)
+    }
   }
   
   const start = (page - 1) * pageSize
