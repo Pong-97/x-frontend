@@ -9,7 +9,7 @@
           :class="['category-item', { active: activeCategory === category.id }]"
           @click="selectCategory(category)"
         >
-          <span class="icon">{{ category.icon }}</span>
+          <img v-if="category.icon" :src="category.icon" alt="" class="icon" />
           <span class="name">{{ category.name }}</span>
         </div>
       </div>
@@ -124,8 +124,10 @@ onMounted(() => {
     margin-bottom: 1px;
     
     .icon {
-      font-size: 24px;
+      width: 32px;
+      height: 32px;
       margin-bottom: 5px;
+      object-fit: contain;
     }
     
     .name {
