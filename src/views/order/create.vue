@@ -180,27 +180,11 @@ const goBack = () => {
 onMounted(async () => {
   await loadAddressList()
   
-  // 从购物车来的订单
+  // 从购物车来的订单（包括立即购买）
   if (route.query.items) {
     const itemIds = JSON.parse(route.query.items)
     await cartStore.getCart()
     orderItems.value = cartStore.cartList.filter(item => itemIds.includes(item.id))
-  }
-  // 立即购买的订单
-  else if (route.query.productId) {
-    // 这里简化处理，实际应该从商品详情获取
-    orderItems.value = [{
-      id: 1,
-      productId: route.query.productId,
-      quantity: parseInt(route.query.quantity || '1'),
-      spec: route.query.spec || '',
-      product: {
-        id: route.query.productId,
-        name: '商品名称',
-        image: 'https://via.placeholder.com/100',
-        price: 99.00
-      }
-    }]
   }
 })
 </script>

@@ -147,15 +147,28 @@ const confirmSpec = async () => {
       console.error('加入购物车失败', error)
     }
   } else {
-    // 立即购买，跳转到订单确认页
-    router.push({
-      path: '/order/create',
-      query: {
+    // 立即购买：先添加到购物车，然后跳转到订单确认页
+    try {
+      await cartStore.addToCart({
         productId: product.value.id,
         quantity: quantity.value,
         spec: specStr
+      })
+      // 重新获取购物车列表，找到刚添加的商品
+      await cartStore.getCart()
+      // 获取最新添加的购物车项（假设是最后一个）
+      const latestCartItem = cartStore.cartList[cartStore.cartList.length - 1]
+      if (latestCartItem) {
+        router.push({
+          path: '/order/create',
+          query: {
+            items: JSON.stringify([latestCartItem.id])
+          }
+        })
       }
-    })
+    } catch (error) {
+      console.error('立即购买失败', error)
+    }
   }
 }
 
