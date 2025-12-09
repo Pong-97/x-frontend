@@ -24,12 +24,12 @@
     <div class="goods-box">
       <div class="goods-title">商品信息</div>
       <div v-for="item in orderItems" :key="item.id" class="goods-item">
-        <img :src="item.product.image" class="goods-image" />
+        <img :src="item.productImage || item.product?.image" class="goods-image" />
         <div class="goods-info">
-          <div class="goods-name">{{ item.product.name }}</div>
-          <div class="goods-spec">{{ item.spec }}</div>
+          <div class="goods-name">{{ item.productName || item.product?.name }}</div>
+          <div class="goods-spec" v-if="item.spec">{{ item.spec }}</div>
           <div class="goods-bottom">
-            <span class="price">¥{{ item.product.price }}</span>
+            <span class="price">¥{{ item.price || item.product?.price }}</span>
             <span class="quantity">x{{ item.quantity }}</span>
           </div>
         </div>
@@ -116,7 +116,8 @@ const submitting = ref(false)
 
 const totalPrice = computed(() => {
   return orderItems.value.reduce((total, item) => {
-    return total + item.product.price * item.quantity
+    const price = item.price || item.product?.price || 0
+    return total + price * item.quantity
   }, 0)
 })
 
@@ -159,13 +160,8 @@ const handleSubmit = async () => {
   try {
     const data = await createOrder({
       addressId: selectedAddress.value.id,
-      items: orderItems.value.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        spec: item.spec
-      })),
-      remark: remark.value,
-      totalAmount: totalPrice.value
+      cartIds: orderItems.value.map(item => item.id),
+      remark: remark.value
     })
     
     showToast('订单创建成功')

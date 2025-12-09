@@ -20,17 +20,17 @@
 
     <div class="goods-box">
       <div
-        v-for="product in order.products"
-        :key="product.productId"
+        v-for="item in order.items"
+        :key="item.productId"
         class="goods-item"
       >
-        <img :src="product.image" class="goods-image" />
+        <img :src="item.productImage" class="goods-image" />
         <div class="goods-info">
-          <div class="goods-name">{{ product.name }}</div>
-          <div class="goods-spec">{{ product.spec }}</div>
+          <div class="goods-name">{{ item.productName }}</div>
+          <div class="goods-spec" v-if="item.spec">{{ item.spec }}</div>
           <div class="goods-bottom">
-            <span class="price">¥{{ product.price }}</span>
-            <span class="quantity">x{{ product.quantity }}</span>
+            <span class="price">¥{{ item.price }}</span>
+            <span class="quantity">x{{ item.quantity }}</span>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ const router = useRouter()
 const route = useRoute()
 
 const order = ref({
-  products: [],
+  items: [],
   address: {}
 })
 

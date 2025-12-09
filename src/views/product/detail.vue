@@ -10,7 +10,7 @@
     </van-swipe>
 
     <!-- 商品信息 -->
-    <div class="product-info">
+    <div class="product-info" v-if="product.id">
       <div class="price-box">
         <ProductPrice :price="product.price" :original-price="product.originalPrice" />
       </div>
@@ -27,13 +27,13 @@
     </div>
 
     <!-- 规格选择 -->
-    <div class="spec-box" @click="showSpecPopup = true">
+    <div class="spec-box" v-if="product.id" @click="showSpecPopup = true">
       <span>选择规格</span>
       <van-icon name="arrow" />
     </div>
 
     <!-- 商品详情 -->
-    <div class="detail-box">
+    <div class="detail-box" v-if="product.id">
       <div class="detail-title">商品详情</div>
       <div class="detail-content">{{ product.description }}</div>
     </div>

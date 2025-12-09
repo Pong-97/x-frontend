@@ -29,18 +29,18 @@
 
           <div class="order-products">
             <div
-              v-for="product in order.products"
-              :key="product.productId"
+              v-for="item in order.items"
+              :key="item.productId"
               class="product-item"
               @click="goOrderDetail(order.id)"
             >
-              <img :src="product.image" class="product-image" />
+              <img :src="item.productImage" class="product-image" />
               <div class="product-info">
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-spec">{{ product.spec }}</div>
+                <div class="product-name">{{ item.productName }}</div>
+                <div class="product-spec" v-if="item.spec">{{ item.spec }}</div>
                 <div class="product-bottom">
-                  <span class="price">¥{{ product.price }}</span>
-                  <span class="quantity">x{{ product.quantity }}</span>
+                  <span class="price">¥{{ item.price }}</span>
+                  <span class="quantity">x{{ item.quantity }}</span>
                 </div>
               </div>
             </div>
