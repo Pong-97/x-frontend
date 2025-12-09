@@ -8,7 +8,12 @@ export const useCartStore = defineStore('cart', () => {
   // 获取购物车列表
   const getCart = async () => {
     const res = await getCartList()
-    cartList.value = res
+    console.log('购物车数据:', res)
+    // 映射后端返回的 selected 字段到前端的 checked 字段
+    cartList.value = (res || []).map(item => ({
+      ...item,
+      checked: item.selected
+    }))
     return res
   }
 
@@ -43,7 +48,7 @@ export const useCartStore = defineStore('cart', () => {
   // 选中商品总价
   const checkedTotal = computed(() => {
     return checkedCart.value.reduce((total, item) => {
-      return total + item.product.price * item.quantity
+      return total + (item.price || 0) * item.quantity
     }, 0)
   })
 

@@ -15,17 +15,17 @@
           class="cart-item"
         >
           <van-checkbox :name="item.id" />
-          <img :src="item.product.image" class="product-image" @click="goProductDetail(item.productId)" />
+          <img :src="item.productImage" class="product-image" @click="goProductDetail(item.productId)" />
           <div class="product-info">
-            <div class="product-name">{{ item.product.name }}</div>
-            <div class="product-spec">{{ item.spec }}</div>
+            <div class="product-name">{{ item.productName || '商品' }}</div>
+            <div class="product-spec" v-if="item.spec">{{ item.spec }}</div>
             <div class="product-bottom">
-              <div class="price">¥{{ item.product.price }}</div>
+              <div class="price">¥{{ item.price || 0 }}</div>
               <van-stepper
                 v-model="item.quantity"
                 @change="updateQuantity(item)"
                 min="1"
-                :max="item.product.stock"
+                :max="item.stock || 99"
               />
             </div>
           </div>
@@ -80,7 +80,7 @@ const checkAll = computed({
 const totalPrice = computed(() => {
   return cartStore.cartList
     .filter(item => checkedIds.value.includes(item.id))
-    .reduce((total, item) => total + item.product.price * item.quantity, 0)
+    .reduce((total, item) => total + (item.price || 0) * item.quantity, 0)
 })
 
 const onCheckAll = (checked) => {
