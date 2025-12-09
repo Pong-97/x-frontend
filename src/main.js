@@ -7,8 +7,8 @@ import router from './router'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
-// 引入Mock数据
-import './mock'
+// 引入Mock数据 - 已禁用，使用后端API
+// import './mock'
 
 const app = createApp(App)
 const pinia = createPinia()

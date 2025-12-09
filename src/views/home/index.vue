@@ -24,7 +24,7 @@
         :key="category.id"
         @click="goCategory(category.id)"
       >
-        <div class="icon">{{ category.icon }}</div>
+        <img :src="category.icon" class="icon" alt="category icon" />
         <div class="name">{{ category.name }}</div>
       </div>
     </div>
@@ -155,7 +155,9 @@ onMounted(() => {
     gap: 8px;
     
     .icon {
-      font-size: 32px;
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
     }
     
     .name {
